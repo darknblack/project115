@@ -58,6 +58,12 @@ public class DisplaySingleShelter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_single_shelter);
 
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+
         shelter = FirebaseDatabase.getInstance().getReference("shelter");
         mStorage = FirebaseStorage.getInstance().getReference();
 
@@ -70,32 +76,26 @@ public class DisplaySingleShelter extends AppCompatActivity {
         Intent intent = getIntent();
         final String key = intent.getStringExtra("key");
 
-
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-
-
         mListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 Shelter sh = dataSnapshot.child(key).getValue(Shelter.class);
 
-                String _name, _address, _capacity, _days;
+                String shelter_name, shelter_address, shelter_capacity, shelter_days;
 
-                _name = sh.getName();
-                _address = sh.getAddress();
-                _capacity = sh.getCapacity();
-                _days = sh.getDays();
+                shelter_name = sh.getName();
+                shelter_address = sh.getAddress();
+                shelter_capacity = sh.getCapacity();
+                shelter_days = sh.getDays();
 
                 // view map
-                address = _address;
+                address = shelter_address;
 
-                eName.setText(_name);
-                eAddress.setText("Address: " + _address);
-                eCapacity.setText("Max Capacity Allowed: " + _capacity);
-                eDays.setText("Max Days Allowed: " + _days);
+                eName.setText(shelter_name);
+                eAddress.setText("Address: " + shelter_address);
+                eCapacity.setText("Max Capacity Allowed: " + shelter_capacity);
+                eDays.setText("Max Days Allowed: " + shelter_days);
 
                 StorageReference storageReference = mStorage.child(sh.getLink());
 

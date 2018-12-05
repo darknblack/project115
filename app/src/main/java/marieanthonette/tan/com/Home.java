@@ -27,14 +27,16 @@ public class Home extends AppCompatActivity {
 
         if(option == bAddShelter) {
             intent = new Intent(Home.this, AddShelter.class);
+            startActivity(intent);
         }
         else if(option == bViewShelters) {
             intent = new Intent(Home.this, DisplayShelters.class);
+            startActivity(intent);
         }
-        else {
-            intent = new Intent(Home.this, Home.class);
-        }
-
-        startActivity(intent);
+//        else {
+//            intent = new Intent(Home.this, Home.class);
+//        }
+//
+//        startActivity(intent);
     }
 }
