@@ -40,22 +40,27 @@
         <activity
             android:name=".AddShelter"
             android:label="Add Shelter"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".DisplayShelters"
             android:label="Shelter List"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".DisplaySingleShelter"
-            android:label="Shelter"></activity>
+            android:label="Shelter">
+        </activity>
         <activity
             android:name=".Home"
             android:label="Home">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".AddRequest"
+            android:label="Add Request" >
         </activity>
     </application>
 

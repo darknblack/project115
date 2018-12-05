@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class Home extends AppCompatActivity {
 
-    int bAddShelter, bViewShelters, bLogout;
+    int bAddShelter, bViewShelters, bLogout, bViewRequests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +18,7 @@ public class Home extends AppCompatActivity {
         bAddShelter = R.id.vAddShelter;
         bViewShelters = R.id.vViewShelters;
         bLogout = R.id.vLogout;
+        bViewRequests = R.id.vViewRequests;
     }
 
     public void action(View v) {

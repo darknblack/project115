@@ -9,11 +9,7 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="226dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="4dp"
+        style="@style/HomeLogo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -24,10 +20,7 @@
 
     <Button
         android:id="@+id/vAddShelter"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        style="@style/HomeBtn"
         android:layout_marginTop="28dp"
         android:onClick="action"
         android:text="Add Shelter"
@@ -37,10 +30,7 @@
 
     <Button
         android:id="@+id/vViewShelters"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        style="@style/HomeBtn"
         android:onClick="action"
         android:text="View Shelters"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,17 +39,22 @@
 
     <Button
         android:id="@+id/vLogout"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        style="@style/HomeBtn"
         android:onClick="action"
         android:text="Logout"
+        android:layout_marginTop="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vViewShelters"
-        app:layout_constraintVertical_bias="0.27" />
+        app:layout_constraintTop_toBottomOf="@+id/vViewRequests"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/vViewRequests"
+        android:text="View Request"
+        style="@style/HomeBtn"
+        android:onClick="action"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vViewShelters" />
 </android.support.constraint.ConstraintLayout>
