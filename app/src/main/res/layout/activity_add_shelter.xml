@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddShelter">
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="456dp"
+        android:onClick="addRecord"
+        android:text="Add Shelter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="0dp"
+        android:layout_height="444dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/selectImage"
+                android:layout_width="match_parent"
+                android:layout_height="103dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:onClick="chooseImage"
+                android:src="@drawable/addimage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="(Select an image from gallery)"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selectImage" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:text="Name:"
+                style="@style/FieldLabel"
+                />
+
+            <EditText
+                android:id="@+id/etName"
+                style="@style/FieldForm" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:text="Address:"
+                style="@style/FieldLabel" />
+
+            <EditText
+                android:id="@+id/etAddress"
+                style="@style/FieldForm" />
+
+            <TextView
+                android:id="@+id/textView"
+                style="@style/FieldLabel"
+                android:text="Maximum Capacity Allowed" />
+
+            <EditText
+                android:id="@+id/etCapacity"
+                style="@style/FieldForm_NumOnly"
+                android:text="5" />
+
+            <TextView
+                android:id="@+id/textView2"
+                style="@style/FieldLabel"
+                android:text="Maximum Days Allowed" />
+
+            <EditText
+                android:id="@+id/etDays"
+                style="@style/FieldForm_NumOnly"
+                android:text="30" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
