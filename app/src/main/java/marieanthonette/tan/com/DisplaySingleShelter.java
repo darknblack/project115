@@ -185,12 +185,11 @@ public class DisplaySingleShelter extends AppCompatActivity {
         shelter_request.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.child(item_key).child(shelter_userID).exists())
+                if(!dataSnapshot.child(item_key).child(LoginUserID).exists())
                     return;
 
                 ShelterRequest sr = dataSnapshot.child(item_key).child(LoginUserID).getValue(ShelterRequest.class);
                 Boolean isClicked = sr.getRequest();
-
 
                 if (isClicked) {
                     isViewMapClicked = true;
