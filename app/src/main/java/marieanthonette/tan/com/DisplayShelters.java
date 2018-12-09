@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,9 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -75,8 +76,23 @@ public class DisplayShelters extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 shelterListID.removeAllViews();
+
+                ArrayList<Shelter> shelters_list = new ArrayList<Shelter>();
+                ArrayList<String> keys = new ArrayList<String>();
+
                 for(DataSnapshot ss : dataSnapshot.getChildren()) {
-                    displayShelter(ss.getValue(Shelter.class), ss.getKey());
+                    Shelter shelter = ss.getValue(Shelter.class);
+                    String key = ss.getKey();
+
+                    shelters_list.add(0, shelter);
+                    keys.add(0, key);
+                }
+
+//                Collections.reverse(shelters_list);
+//                Collections.reverse(keys);
+
+                for(int i = 0; i < shelters_list.size(); i++){
+                    displayShelter(shelters_list.get(i),keys.get(i));
                 }
 
             }
@@ -132,7 +148,10 @@ public class DisplayShelters extends AppCompatActivity {
         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.with(DisplayShelters.this).load(uri.toString()).into(imageView);
+                Glide.with(getApplicationContext())
+                        .asBitmap()
+                        .load(uri.toString())
+                        .into(imageView);
             }
         });
 

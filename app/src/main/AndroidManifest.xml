@@ -44,23 +44,24 @@
         <activity
             android:name=".DisplayShelters"
             android:label="Shelter List"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
+            android:theme="@style/AppTheme.TransparentMenu"
             android:name=".DisplaySingleShelter"
-            android:label="Shelter">
+            android:label="">
+
         </activity>
         <activity
             android:name=".Home"
             android:label="Home">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddRequest"
-            android:label="Add Request" >
+            android:name=".DisplayRequests"
+            android:label="View Requests">
         </activity>
     </application>
 

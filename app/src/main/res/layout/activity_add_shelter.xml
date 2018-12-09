@@ -7,36 +7,33 @@
     tools:context=".AddShelter">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/addEditBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="456dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/btn_radius"
-        android:onClick="addRecord"
+        android:onClick="toAddOrEdit"
         android:text="Add Shelter"
         android:textColor="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/addShelterScrollView"
         app:layout_constraintVertical_bias="1.0" />
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/addShelterScrollView"
         android:layout_width="0dp"
-        android:layout_height="444dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="443dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,7 +46,6 @@
                 android:layout_height="103dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="16dp"
-                android:onClick="chooseImage"
                 android:src="@drawable/addimage"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -68,9 +64,8 @@
 
             <TextView
                 android:id="@+id/textView6"
-                android:text="Name:"
                 style="@style/FieldLabel"
-                />
+                android:text="Name:" />
 
             <EditText
                 android:id="@+id/etName"
@@ -78,8 +73,8 @@
 
             <TextView
                 android:id="@+id/textView5"
-                android:text="Address:"
-                style="@style/FieldLabel" />
+                style="@style/FieldLabel"
+                android:text="Address:" />
 
             <EditText
                 android:id="@+id/etAddress"
@@ -107,5 +102,24 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/removeBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/btn_radius_red"
+        android:onClick="deleteShelter"
+        android:text="DELETE SHELTER"
+        android:textColor="#fff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/addShelterScrollView"
+        app:layout_constraintVertical_bias="0.892" />
 
 </android.support.constraint.ConstraintLayout>

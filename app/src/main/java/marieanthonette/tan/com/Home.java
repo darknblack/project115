@@ -34,9 +34,10 @@ public class Home extends AppCompatActivity {
             intent = new Intent(Home.this, DisplayShelters.class);
             startActivity(intent);
         }
-//        else {
-//            intent = new Intent(Home.this, Home.class);
-//        }
+        else if(option == bViewRequests) {
+            intent = new Intent(Home.this, DisplayRequests.class);
+            startActivity(intent);
+        }
 //
 //        startActivity(intent);
     }

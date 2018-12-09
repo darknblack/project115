@@ -16,6 +16,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.TransparentMenu" parent="Theme.AppCompat.Light">
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
     <style name="HomeLogo">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">225dp</item>
@@ -31,6 +37,15 @@
         <item name="android:layout_marginStart">8dp</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:textColor">#fff</item>
+        <item name="android:background">@drawable/btn_radius</item>
+    </style>
+
+    <style name="RequestBtn">
+        <item name="android:layout_height">15dp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:background">@drawable/btn_radius</item>
     </style>
 
@@ -75,7 +90,7 @@
         <item name="layout_constraintTop_toTopOf">parent</item>
     </style>
     <style name="FullImage" parent="CardImage">
-        <item name="android:layout_height">250dp</item>
+        <item name="android:layout_height">270dp</item>
     </style>
     <style name="FieldLabel">
         <item name="android:layout_width">match_parent</item>
@@ -124,6 +139,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="UserLabelRequested" parent="Card_Name">
+        <item name="android:layout_margin">5dp</item>
+    </style>
     <style name="BtnRequested">
         <item name="android:background">#333</item>
     </style>

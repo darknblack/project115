@@ -1,11 +1,8 @@
 package marieanthonette.tan.com;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -15,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 public class DisplaySingleShelter extends AppCompatActivity {
 
@@ -36,7 +33,16 @@ public class DisplaySingleShelter extends AppCompatActivity {
 
     ValueEventListener mListener;
 
-    String user_id, item_key, address;
+    String LoginUserID = "IANODERON";
+    String item_key, address;
+    String shelter_key,
+            shelter_userID,
+            shelter_name,
+            shelter_address,
+            shelter_capacity,
+            shelter_days,
+            shelter_user_id,
+            shelter_image_link;
 
     Boolean isViewMapClicked;
 
@@ -80,26 +86,34 @@ public class DisplaySingleShelter extends AppCompatActivity {
         bViewMap = findViewById(R.id.viewMap);
         bRequest = findViewById(R.id.addRequest);
 
+    } // END ONCREATE
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         Intent intent = getIntent();
         item_key = intent.getStringExtra("key");
 //        item_key = "-LSlttM6jCfmPgm3jt5B";
-        user_id = "IANODERON";
+        shelter_userID = "";
 
         mListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 Shelter sh = dataSnapshot.child(item_key).getValue(Shelter.class);
-
-                String shelter_name, shelter_address, shelter_capacity, shelter_days;
+                shelter_key = dataSnapshot.child(item_key).getKey();
 
                 shelter_name = sh.getName();
                 shelter_address = sh.getAddress();
                 shelter_capacity = sh.getCapacity();
                 shelter_days = sh.getDays();
+                shelter_user_id = sh.getUserID();
+                shelter_image_link = sh.getLink();
 
                 // view map
                 address = shelter_address;
+                shelter_userID = shelter_user_id;
 
                 eName.setText(shelter_name);
 
@@ -111,14 +125,29 @@ public class DisplaySingleShelter extends AppCompatActivity {
                 eCapacity.setText(field_max_capacity_allowed);
                 eDays.setText(field_max_days_allowed);
 
-                StorageReference storageReference = mStorage.child(sh.getLink());
+                StorageReference storageReference = mStorage.child(shelter_image_link);
 
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Picasso.with(DisplaySingleShelter.this).load(uri.toString()).into(eHeader);
+                        Glide.with(getApplicationContext())
+                                .asBitmap()
+                                .load(uri.toString())
+                                .into(eHeader);
                     }
                 });
+
+
+                // SET DEFAULTS
+                isViewMapClicked = false;
+
+                if(isOwnerOfPost()) {
+                    setRequestBtnToEditBtn();
+                } else {
+                    setViewMapButtonStatus();
+                }
+
+
             }
 
             @Override
@@ -127,21 +156,28 @@ public class DisplaySingleShelter extends AppCompatActivity {
 
         shelter.addValueEventListener(mListener);
 
+        setButtonViewMapDefaults();
+        setButtonRequestDefaults();
 
-        // SET DEFAULTS
-        isViewMapClicked = false;
+    }
 
+    public void setButtonViewMapDefaults() {
         bViewMap.setBackground(getResources().getDrawable(R.drawable.btn_radius));
         bViewMap.setTextColor(getResources().getColor(R.color.white));
+    }
 
-        setViewMapButtonDefaults();
-        setViewMapButtonStatus();
-
-    } // END ONCREATE
-
-    public void setViewMapButtonDefaults() {
+    public void setButtonRequestDefaults() {
         bRequest.setBackground(getResources().getDrawable(R.drawable.btn_radius));
         bRequest.setTextColor(getResources().getColor(R.color.white));
+    }
+
+    public void setRequestBtnToEditBtn() {
+        bRequest.setText("Edit");
+        bRequest.setBackground(getResources().getDrawable(R.drawable.btn_radius_green));
+    }
+
+    public boolean isOwnerOfPost() {
+        return LoginUserID.equals(shelter_userID);
     }
 
     public void setViewMapButtonStatus() {
@@ -149,21 +185,23 @@ public class DisplaySingleShelter extends AppCompatActivity {
         shelter_request.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.child(user_id).child(item_key).exists())
+                if(!dataSnapshot.child(item_key).child(shelter_userID).exists())
                     return;
 
-                ShelterRequest sr = dataSnapshot.child(user_id).child(item_key).getValue(ShelterRequest.class);
+                ShelterRequest sr = dataSnapshot.child(item_key).child(LoginUserID).getValue(ShelterRequest.class);
                 Boolean isClicked = sr.getRequest();
 
-                if(isClicked) {
+
+                if (isClicked) {
                     isViewMapClicked = true;
                     bRequest.setText("REQUESTED");
                     bRequest.setBackground(getResources().getDrawable(R.drawable.btn_radius_active));
                 } else {
                     isViewMapClicked = false;
                     bRequest.setText("REQUEST");
-                    setViewMapButtonDefaults();
+                    setButtonRequestDefaults();
                 }
+
             }
 
             @Override
@@ -179,7 +217,22 @@ public class DisplaySingleShelter extends AppCompatActivity {
     }
 
     public void addRequest(View v) {
-        shelter_request.child(user_id).child(item_key).setValue(new ShelterRequest(!isViewMapClicked));
+        // SHOULD DISPLAY EDIT SHELTER
+        if(isOwnerOfPost()) {
+            Intent intent = new Intent(DisplaySingleShelter.this, AddShelter.class);
+            intent.putExtra("action", "edit");
+            intent.putExtra("shelter_key", shelter_key);
+            intent.putExtra("shelter_name", shelter_name);
+            intent.putExtra("shelter_address", shelter_address);
+            intent.putExtra("shelter_capacity", shelter_capacity);
+            intent.putExtra("shelter_days", shelter_days);
+            intent.putExtra("shelter_image_link", shelter_image_link);
+            startActivity(intent);
+        }
+
+        else {
+            shelter_request.child(item_key).child(LoginUserID).setValue(new ShelterRequest(!isViewMapClicked));
+        }
     }
 
     protected void Toast(String message) {

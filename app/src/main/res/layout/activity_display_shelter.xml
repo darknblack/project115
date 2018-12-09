@@ -8,7 +8,9 @@
     tools:context=".DisplayShelters">
 
     <ScrollView
-        style="@style/CardScrollView">
+        style="@style/CardScrollView"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="12dp">
 
         <LinearLayout
             android:id="@+id/shelterLists"
@@ -17,27 +19,27 @@
 
             <!--<android.support.v7.widget.CardView style="@style/Card">-->
 
-                <!--<LinearLayout style="@style/CardLinearOuter">-->
+            <!--<LinearLayout style="@style/CardLinearOuter">-->
 
-                    <!--<ImageView-->
-                        <!--android:id="@+id/imageView"-->
-                        <!--style="@style/CardImage"-->
-                        <!--app:srcCompat="@drawable/shelter1" />-->
+            <!--<ImageView-->
+            <!--android:id="@+id/imageView"-->
+            <!--style="@style/CardImage"-->
+            <!--app:srcCompat="@drawable/shelter1" />-->
 
-                    <!--<LinearLayout style="@style/CardLinearInner">-->
+            <!--<LinearLayout style="@style/CardLinearInner">-->
 
-                        <!--<TextView-->
-                            <!--android:id="@+id/textView3"-->
-                            <!--style="@style/Card_Name"-->
-                            <!--android:text="TextView" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/textView3"-->
+            <!--style="@style/Card_Name"-->
+            <!--android:text="TextView" />-->
 
-                        <!--<TextView-->
-                            <!--android:id="@+id/textView7"-->
-                            <!--style="@style/Card_Address"-->
-                            <!--android:text="TextView" />-->
-                    <!--</LinearLayout>-->
+            <!--<TextView-->
+            <!--android:id="@+id/textView7"-->
+            <!--style="@style/Card_Address"-->
+            <!--android:text="TextView" />-->
+            <!--</LinearLayout>-->
 
-                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
 
             <!--</android.support.v7.widget.CardView>-->
 
