@@ -261,8 +261,6 @@ public class AddShelter extends AppCompatActivity {
         builder.setMessage("Are you sure you want to delete this post?")
                 .setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
-
-
     }
 
     public void toAddOrEdit(View v) {
@@ -289,10 +287,9 @@ public class AddShelter extends AppCompatActivity {
 
                         addOrEditRecord(false, shelter_key, shelter_image_link);
                     }
-
-                } else {
-                    return; // EXIT THIS METHOD IF NO
                 }
+
+                // DO NOTHING IF NO
             }
         };
 
