@@ -7,11 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,6 +38,9 @@ import java.util.List;
 public class DisplayShelters extends AppCompatActivity {
 
     DatabaseReference mShelter;
+
+
+    EditText mSearchField;
 
     List<Shelter> sheltersArray;
     LinearLayout shelterListID;
@@ -61,12 +67,67 @@ public class DisplayShelters extends AppCompatActivity {
         scale = getResources().getDisplayMetrics().density;
 
         shelterListID = findViewById(R.id.shelterLists);
+        mSearchField = findViewById(R.id.searchField);
 
 
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        mSearchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+            @Override
+            public void afterTextChanged(Editable editable) {
+                searchShelter();
+            }
+        });
+    }
+
+    public void searchShelter() {
+        String querySearch = mSearchField.getText().toString().trim().toLowerCase();
+        mShelter.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                shelterListID.removeAllViews();
+
+                ArrayList<Shelter> shelters_list = new ArrayList<Shelter>();
+                ArrayList<String> keys = new ArrayList<String>();
+
+                for(DataSnapshot ss : dataSnapshot.getChildren()) {
+                    Shelter shelter = ss.getValue(Shelter.class);
+                    String key = ss.getKey();
+
+                    String shelter_name = shelter.getName().toLowerCase();
+                    String shelter_address = shelter.getAddress().toLowerCase();
+
+                    if(!(shelter_name.contains(querySearch) || shelter_address.contains(querySearch))) {
+                        continue;
+                    }
+
+
+                    shelters_list.add(0, shelter);
+                    keys.add(0, key);
+                }
+
+//                Collections.reverse(shelters_list);
+//                Collections.reverse(keys);
+
+                for(int i = 0; i < shelters_list.size(); i++){
+                    displayShelter(shelters_list.get(i),keys.get(i));
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("hackdog", "error " + databaseError.toException());
+            }
+        });
     }
 
     @Override
