@@ -87,7 +87,7 @@ public class AddShelter extends AppCompatActivity {
             startActivity(i);
             finish();
         }
-        LoginUserID = mAuth.getCurrentUser().getUid().toLowerCase();
+        LoginUserID = mAuth.getCurrentUser().getDisplayName().toLowerCase();
 
         // FIELDS
         eName = findViewById(R.id.etName);

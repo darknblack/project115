@@ -54,7 +54,7 @@
         android:id="@+id/vViewRequests"
         style="@style/HomeBtn"
         android:onClick="action"
-        android:text="View Request"
+        android:text="View Inquiries"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vViewShelters" />

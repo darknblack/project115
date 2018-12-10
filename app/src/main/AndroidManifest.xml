@@ -16,14 +16,6 @@
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".LogIn"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".SignUp"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
@@ -53,13 +45,23 @@
         <activity
             android:name=".DisplaySingleShelter"
             android:label=""
-            android:theme="@style/AppTheme.TransparentMenu"></activity>
+            android:theme="@style/AppTheme.TransparentMenu">
+        </activity>
         <activity
             android:name=".Home"
             android:label="Home"></activity>
         <activity
-            android:name=".DisplayRequests"
-            android:label="View Requests"></activity>
+            android:name=".DisplayInquiries"
+            android:label="View Inquiries">
+        </activity>
+        <activity
+            android:name=".LogIn"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

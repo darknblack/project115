@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +43,11 @@ public class DisplaySingleShelter extends AppCompatActivity {
     ValueEventListener mListener;
 
     String LoginUserID = "";
-    String item_key, address;
+    String
+            item_key,
+            shelter_ownerID,
+            address;
+
     String shelter_key,
             shelter_userID,
             shelter_name,
@@ -84,7 +87,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
         }
 
         shelter = FirebaseDatabase.getInstance().getReference("shelter");
-        shelter_request = FirebaseDatabase.getInstance().getReference("shelter_request");
+        shelter_request = FirebaseDatabase.getInstance().getReference("shelter_inquiries");
 
         mAuth = FirebaseAuth.getInstance();
         // REDIRECT IF NOT AUTHENTICATED
@@ -116,7 +119,8 @@ public class DisplaySingleShelter extends AppCompatActivity {
 
         Intent intent = getIntent();
         item_key = intent.getStringExtra("key");
-//        item_key = "-LSlttM6jCfmPgm3jt5B";
+        shelter_ownerID = intent.getStringExtra("shelter_ownerID");
+
         shelter_userID = "";
 
         mListener = new ValueEventListener() {
@@ -174,7 +178,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
                     setRequestBtnToUnavailable();
                 }
                 else {
-                    setViewMapButtonStatus();
+                    setViewInquiryBtnStatus();
                 }
 
 
@@ -187,7 +191,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
         shelter.addValueEventListener(mListener);
 
         setButtonViewMapDefaults();
-        setButtonRequestDefaults();
+        setButtonInquiryDefaults();
     }
 
     public void setButtonViewMapDefaults() {
@@ -195,7 +199,8 @@ public class DisplaySingleShelter extends AppCompatActivity {
         bViewMap.setTextColor(getResources().getColor(R.color.white));
     }
 
-    public void setButtonRequestDefaults() {
+    public void setButtonInquiryDefaults() {
+        bRequest.setText("SEND INQUIRY");
         bRequest.setBackground(getResources().getDrawable(R.drawable.btn_radius));
         bRequest.setTextColor(getResources().getColor(R.color.white));
     }
@@ -214,15 +219,15 @@ public class DisplaySingleShelter extends AppCompatActivity {
         return LoginUserID.equals(shelter_userID);
     }
 
-    public void setViewMapButtonStatus() {
+    public void setViewInquiryBtnStatus() {
 
         shelter_request.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.child(item_key).child(LoginUserID).exists())
+                if(!dataSnapshot.child(shelter_ownerID).child(item_key).child(LoginUserID).exists())
                     return;
 
-                ShelterRequest sr = dataSnapshot.child(item_key).child(LoginUserID).getValue(ShelterRequest.class);
+                ShelterRequest sr = dataSnapshot.child(shelter_ownerID).child(item_key).child(LoginUserID).getValue(ShelterRequest.class);
                 Boolean isClicked = sr.getRequest();
 
                 if (isClicked) {
@@ -231,8 +236,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
                     bRequest.setBackground(getResources().getDrawable(R.drawable.btn_radius_active));
                 } else {
                     isViewMapClicked = false;
-                    bRequest.setText("SEND INQUIRY");
-                    setButtonRequestDefaults();
+                    setButtonInquiryDefaults();
                 }
 
             }
@@ -273,7 +277,11 @@ public class DisplaySingleShelter extends AppCompatActivity {
                 Toast("Inquiry succesfully removed...");
             else
                 Toast("Inquiry successfully sent...");
-            shelter_request.child(item_key).child(LoginUserID).setValue(new ShelterRequest(!isViewMapClicked));
+
+            shelter_request.child(shelter_ownerID)
+                    .child(item_key)
+                    .child(LoginUserID)
+                    .setValue(new ShelterRequest(!isViewMapClicked));
         }
     }
 
