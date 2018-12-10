@@ -77,21 +77,29 @@ public class DisplayShelters extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
+//        mAuth = FirebaseAuth.getInstance();
+//
+//        mAuthListener = new FirebaseAuth.AuthStateListener(){
+//            @Override
+//            public  void  onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth){
+//                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                if(user == null) {
+//                    Intent i = new Intent(getApplicationContext(), LogIn.class);
+//                    startActivity(i);
+//                    finish();
+//                }
+//            }
+//        };
+//
+//        mAuth.addAuthStateListener(mAuthListener);
+
         mAuth = FirebaseAuth.getInstance();
-
-        mAuthListener = new FirebaseAuth.AuthStateListener(){
-            @Override
-            public  void  onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth){
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user == null) {
-                    Intent i = new Intent(getApplicationContext(), LogIn.class);
-                    startActivity(i);
-                    finish();
-                }
-            }
-        };
-
-        mAuth.addAuthStateListener(mAuthListener);
+        // REDIRECT IF NOT AUTHENTICATED
+        if(mAuth.getCurrentUser() == null) {
+            Intent i = new Intent(getApplicationContext(), LogIn.class);
+            startActivity(i);
+            finish();
+        }
 
 
         mSearchField.addTextChangedListener(new TextWatcher() {

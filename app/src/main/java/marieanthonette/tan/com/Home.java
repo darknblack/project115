@@ -47,6 +47,14 @@ public class Home extends AppCompatActivity {
 
         mUsername.setText("Username: " + userName);
 
+        mAuth = FirebaseAuth.getInstance();
+        // REDIRECT IF NOT AUTHENTICATED
+        if(mAuth.getCurrentUser() == null) {
+            Intent i = new Intent(getApplicationContext(), LogIn.class);
+            startActivity(i);
+            finish();
+        }
+
         Intent intent = getIntent();
         if(intent.getExtras() != null && intent.getStringExtra("intent_from").equals("login"))
             Toast("Hi! " + userName);
