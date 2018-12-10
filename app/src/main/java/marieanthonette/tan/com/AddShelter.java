@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -38,6 +39,7 @@ public class AddShelter extends AppCompatActivity {
     EditText eName, eAddress, eCapacity, eDays;
 
     Button mAddEditBtn, mRemoveBtn;
+    CheckBox mAvailableCheckBox;
 
     private ImageView mSelectImage;
     private StorageReference mStorage;
@@ -85,6 +87,7 @@ public class AddShelter extends AppCompatActivity {
         mAddEditBtn = findViewById(R.id.addEditBtn);
         mRemoveBtn = findViewById(R.id.removeBtn);
         mAddShelterScrollView = findViewById(R.id.addShelterScrollView);
+        mAvailableCheckBox = findViewById(R.id.availableCheckBox);
 
         // ONCLICK | IMAGE
         mSelectImage.setOnClickListener(new View.OnClickListener() {
@@ -110,17 +113,18 @@ public class AddShelter extends AppCompatActivity {
             String shelter_capacity = intent.getStringExtra("shelter_capacity");
             String shelter_days = intent.getStringExtra("shelter_days");
             String shelter_image_link = intent.getStringExtra("shelter_image_link");
+            Boolean shelter_isAvailable = Boolean.parseBoolean(intent.getStringExtra("shelter_isAvailable"));
 
-
-            this.setTitle("Edit Shelter");
+            this.setTitle("EDIT");
             eName.setText(shelter_name);
             eAddress.setText(shelter_address);
             eCapacity.setText(shelter_capacity);
             eDays.setText(shelter_days);
-            mAddEditBtn.setText("EDIT SHELTER");
+            mAvailableCheckBox.setChecked(shelter_isAvailable);
+
+            mAddEditBtn.setText("EDIT");
 
             mRemoveBtn.setVisibility(View.VISIBLE);
-            mAddShelterScrollView.getLayoutParams().height = Math.round(getResources().getDisplayMetrics().density * 435);
 
 
             // GET THE APPROPRIATE IMAGE ACCORDING TO IMAGE LINK
@@ -216,7 +220,7 @@ public class AddShelter extends AppCompatActivity {
                 imageFilePath = existingFileName;
             }
 
-            shelter.child(key).setValue(new Shelter(name, address, imageFilePath, days, capacity, LoginUserID));
+            shelter.child(key).setValue(new Shelter(name, address, imageFilePath, days, capacity, LoginUserID, mAvailableCheckBox.isChecked()));
 
             if(imageExtension == null) {
                 Toast("Record updated ...");
