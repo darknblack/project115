@@ -41,9 +41,10 @@ public class LogIn extends AppCompatActivity {
                 .build();
 
         if(mAuth.getCurrentUser() != null) {
+            Toast("USER ALREADY LOGIN");
             goToHomePage();
         }
-        
+
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -52,6 +53,7 @@ public class LogIn extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast("SIGN IN IS CLICKEd");
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, 101);
             }
@@ -60,6 +62,7 @@ public class LogIn extends AppCompatActivity {
     }
 
     public void goToHomePage() {
+        Toast("GO TO HOMPAGE");
         Intent i = new Intent(getApplicationContext(), Home.class);
         i.putExtra("intent_from", "login");
         startActivity(i);
