@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +39,7 @@ import java.util.List;
 public class DisplayShelters extends AppCompatActivity {
 
     DatabaseReference mShelter;
-
+    private FirebaseAuth mAuth;
 
     EditText mSearchField;
 
@@ -72,6 +73,15 @@ public class DisplayShelters extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        mAuth = FirebaseAuth.getInstance();
+        // REDIRECT IF NOT AUTHENTICATED
+        if(mAuth.getCurrentUser() == null) {
+            Intent i = new Intent(getApplicationContext(), LogIn.class);
+            startActivity(i);
+            finish();
+        }
+
 
         mSearchField.addTextChangedListener(new TextWatcher() {
             @Override

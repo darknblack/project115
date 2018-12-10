@@ -43,8 +43,7 @@ public class LogIn extends AppCompatActivity {
         if(mAuth.getCurrentUser() != null) {
             goToHomePage();
         }
-
-
+        
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
