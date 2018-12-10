@@ -28,7 +28,12 @@ public class DisplaySingleShelter extends AppCompatActivity {
     StorageReference mStorage;
     Button bRequest, bViewMap;
 
-    TextView eName, eAddress, eCapacity, eDays;
+    TextView eName,
+            eAddress,
+            eCapacity,
+            eDays,
+            eOwner;
+
     ImageView eHeader;
 
     ValueEventListener mListener;
@@ -82,6 +87,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
         eHeader = findViewById(R.id.vHeader);
         eCapacity = findViewById(R.id.vCapacity);
         eDays = findViewById(R.id.vDays);
+        eOwner = findViewById(R.id.vOwner);
 
         bViewMap = findViewById(R.id.viewMap);
         bRequest = findViewById(R.id.addRequest);
@@ -120,10 +126,12 @@ public class DisplaySingleShelter extends AppCompatActivity {
                 String field_address = "Address: " + shelter_address;
                 String field_max_capacity_allowed = "Max Capacity Allowed: " + shelter_capacity;
                 String field_max_days_allowed = "Max Days Allowed: " + shelter_days;
+                String field_owner = "Owner: " + shelter_user_id;
 
                 eAddress.setText(field_address);
                 eCapacity.setText(field_max_capacity_allowed);
                 eDays.setText(field_max_days_allowed);
+                eOwner.setText(field_owner);
 
                 StorageReference storageReference = mStorage.child(shelter_image_link);
 
@@ -158,7 +166,6 @@ public class DisplaySingleShelter extends AppCompatActivity {
 
         setButtonViewMapDefaults();
         setButtonRequestDefaults();
-
     }
 
     public void setButtonViewMapDefaults() {

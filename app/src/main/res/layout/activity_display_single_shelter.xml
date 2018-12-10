@@ -8,10 +8,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="438dp"
+        android:layout_height="480dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
@@ -57,6 +57,12 @@
                     style="@style/Card_Address"
                     android:layout_marginBottom="5dp"
                     android:text="Days: " />
+
+                <TextView
+                    android:id="@+id/vOwner"
+                    style="@style/Card_Address"
+                    android:layout_marginBottom="5dp"
+                    android:text="Owner" />
 
             </LinearLayout>
 

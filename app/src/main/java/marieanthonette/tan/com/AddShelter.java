@@ -1,11 +1,13 @@
 package marieanthonette.tan.com;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -98,39 +100,40 @@ public class AddShelter extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        if( intent.getExtras() != null) {
-            String shelter_action = intent.getStringExtra("action");
+        boolean doEdit = intent.getExtras() != null;
+
+        // IF EXISTING THEN EDIT (COMING FROM DisplayShelters.java)
+
+        if(doEdit) {
             String shelter_name = intent.getStringExtra("shelter_name");
             String shelter_address = intent.getStringExtra("shelter_address");
             String shelter_capacity = intent.getStringExtra("shelter_capacity");
             String shelter_days = intent.getStringExtra("shelter_days");
             String shelter_image_link = intent.getStringExtra("shelter_image_link");
 
-            if(shelter_action.equals("edit")) {
 
-                this.setTitle("Edit Shelter");
-                eName.setText(shelter_name);
-                eAddress.setText(shelter_address);
-                eCapacity.setText(shelter_capacity);
-                eDays.setText(shelter_days);
-                mAddEditBtn.setText("EDIT SHELTER");
+            this.setTitle("Edit Shelter");
+            eName.setText(shelter_name);
+            eAddress.setText(shelter_address);
+            eCapacity.setText(shelter_capacity);
+            eDays.setText(shelter_days);
+            mAddEditBtn.setText("EDIT SHELTER");
 
-                mRemoveBtn.setVisibility(View.VISIBLE);
-                mAddShelterScrollView.getLayoutParams().height = Math.round(getResources().getDisplayMetrics().density * 435);
+            mRemoveBtn.setVisibility(View.VISIBLE);
+            mAddShelterScrollView.getLayoutParams().height = Math.round(getResources().getDisplayMetrics().density * 435);
 
 
-                // GET THE APPROPRIATE IMAGE ACCORDING TO IMAGE LINK
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(shelter_image_link);
-                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Glide.with(getApplicationContext())
-                                .asBitmap()
-                                .load(uri.toString())
-                                .into(mSelectImage);
-                    }
-                });
-            }
+            // GET THE APPROPRIATE IMAGE ACCORDING TO IMAGE LINK
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(shelter_image_link);
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide.with(getApplicationContext())
+                            .asBitmap()
+                            .load(uri.toString())
+                            .into(mSelectImage);
+                }
+            });
         }
     }
 
@@ -228,42 +231,77 @@ public class AddShelter extends AppCompatActivity {
         String shelter_key = intent.getStringExtra("shelter_key");
         String shelter_image_link = intent.getStringExtra("shelter_image_link");
 
-        StorageReference storageReference = mStorage.getParent().child(shelter_image_link);
-        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+        // ADD YES OR NO
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
-            public void onSuccess(Void aVoid) {
-                shelter.child(shelter_key).setValue(null);
-                Toast("Delete Succesful...");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Uh-oh, an error occurred!
-                Toast("Error...");
-            }
-        });
+            public void onClick(DialogInterface dialog, int which) {
 
-        navigateUpTo(new Intent(getBaseContext(), DisplayShelters.class));
+                // IF ANSWER IS YES
+                if(which == DialogInterface.BUTTON_POSITIVE) {
+
+                    StorageReference storageReference = mStorage.getParent().child(shelter_image_link);
+                    storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            shelter.child(shelter_key).setValue(null);
+                            Toast("Delete Succesful...");
+                            navigateUpTo(new Intent(getBaseContext(), AddShelter.class));
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast("Error in deleting...");
+                        }
+                    });
+                } // FOR NO ->  DialogInterface.BUTTON_NEGATIVE
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddShelter.this);
+        builder.setMessage("Are you sure you want to delete this post?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
+
     }
 
     public void toAddOrEdit(View v) {
         Intent intent = getIntent();
+        Boolean doAdd = intent.getExtras() == null; // add or edit
 
-        // ADD RECORD
-        if(intent.getExtras() == null) {
-            addOrEditRecord(true, null, null);
-        }
+        // ADD YES OR NO
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-        // UPDATE RECORD
-        else {
-            String shelter_action = intent.getStringExtra("action");
-            String shelter_key = intent.getStringExtra("shelter_key");
-            String shelter_image_link = intent.getStringExtra("shelter_image_link");
+                // PERFORM ACTION IF YES
+                if(which == DialogInterface.BUTTON_POSITIVE) {
 
-            if(shelter_action.equals("edit"))
-                addOrEditRecord(false, shelter_key, shelter_image_link);
-        }
+                    // ADD NEW RECORD
+                    if(doAdd) {
+                        addOrEditRecord(true, null, null);
+                    }
 
+                    // UPDATE RECORD
+                    else {
+                        String shelter_key = intent.getStringExtra("shelter_key");
+                        String shelter_image_link = intent.getStringExtra("shelter_image_link");
+
+                        addOrEditRecord(false, shelter_key, shelter_image_link);
+                    }
+
+                } else {
+                    return; // EXIT THIS METHOD IF NO
+                }
+            }
+        };
+
+        String message = "Are you sure you want to " + (doAdd ? "add" : "edit")  + " this?";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddShelter.this);
+        builder.setMessage(message)
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
     /* HELPER METHODS */
