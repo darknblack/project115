@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -33,7 +34,8 @@ import java.io.IOException;
 
 public class AddShelter extends AppCompatActivity {
 
-//    FirebaseDatabase db;
+    private FirebaseAuth mAuth;
+
     DatabaseReference shelter;
 
     EditText eName, eAddress, eCapacity, eDays;
@@ -51,7 +53,7 @@ public class AddShelter extends AppCompatActivity {
     StorageReference imagePath;
     Uri imageUri;
     String imageExtension;
-    String LoginUserID = "IANODERON";
+    String LoginUserID = "";
 
 
     @Override
@@ -77,6 +79,7 @@ public class AddShelter extends AppCompatActivity {
         // FIREBASE
         shelter = FirebaseDatabase.getInstance().getReference("shelter");
         mStorage = FirebaseStorage.getInstance().getReference("images");
+        LoginUserID = mAuth.getCurrentUser().getUid();
 
         // FIELDS
         eName = findViewById(R.id.etName);

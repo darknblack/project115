@@ -1,15 +1,10 @@
 package marieanthonette.tan.com;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,7 +23,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LogIn extends AppCompatActivity {
 
-    private FirebaseAuth auth;
+    private FirebaseAuth mAuth;
     GoogleSignInClient mGoogleSignInClient;
     SignInButton signInButton;
 
@@ -37,7 +32,7 @@ public class LogIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        auth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -45,9 +40,15 @@ public class LogIn extends AppCompatActivity {
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
+        if(mAuth.getCurrentUser() != null) {
+            goToHomePage();
+        }
 
-        signInButton = (SignInButton)findViewById(R.id.signInButton);
+
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        signInButton = findViewById(R.id.signInButton);
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,19 +60,12 @@ public class LogIn extends AppCompatActivity {
 
     }
 
-    public void signUpLink(View v){
-
-        Intent i=null;
-
-        if(v.getId()==R.id.signUpBtn)
-        {
-            i = new Intent(this, SignUp.class);
-            startActivity(i);
-        }
-
+    public void goToHomePage() {
+        Intent i = new Intent(getApplicationContext(), Home.class);
+        i.putExtra("intent_from", "login");
+        startActivity(i);
+        finish();
     }
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -94,20 +88,14 @@ public class LogIn extends AppCompatActivity {
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        auth.signInWithCredential(credential)
+        mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
 
-                            FirebaseUser user = auth.getCurrentUser();
-
-                            Intent i = new Intent(getApplicationContext(), profile.class);
-                            startActivity(i);
-                            finish();
-                            Toast.makeText(getApplicationContext(), "You have successfully logged in!", Toast.LENGTH_LONG).show();
-
+                            goToHomePage();
                         } else {
                             // If sign in fails, display a message to the user
                             Toast.makeText(getApplicationContext(), "Could not log in", Toast.LENGTH_LONG).show();
@@ -116,5 +104,8 @@ public class LogIn extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+    protected void Toast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

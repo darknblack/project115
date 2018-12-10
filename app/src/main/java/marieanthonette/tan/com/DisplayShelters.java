@@ -46,8 +46,6 @@ public class DisplayShelters extends AppCompatActivity {
     LinearLayout shelterListID;
     float scale;
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

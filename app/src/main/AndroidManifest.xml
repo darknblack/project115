@@ -17,7 +17,12 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".LogIn"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".SignUp"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -46,23 +51,15 @@
             android:label="Shelter List"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:theme="@style/AppTheme.TransparentMenu"
             android:name=".DisplaySingleShelter"
-            android:label="">
-
-        </activity>
+            android:label=""
+            android:theme="@style/AppTheme.TransparentMenu"></activity>
         <activity
             android:name=".Home"
-            android:label="Home">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:label="Home"></activity>
         <activity
             android:name=".DisplayRequests"
-            android:label="View Requests">
-        </activity>
+            android:label="View Requests"></activity>
     </application>
 
 </manifest>

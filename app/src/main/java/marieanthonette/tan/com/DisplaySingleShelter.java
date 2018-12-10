@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +26,8 @@ import com.google.firebase.storage.StorageReference;
 
 public class DisplaySingleShelter extends AppCompatActivity {
 
+    private FirebaseAuth mAuth;
+
     DatabaseReference shelter, shelter_request;
     StorageReference mStorage;
     Button bRequest, bViewMap;
@@ -32,13 +36,14 @@ public class DisplaySingleShelter extends AppCompatActivity {
             eAddress,
             eCapacity,
             eDays,
-            eOwner;
+            eOwner,
+            eAvailable;
 
     ImageView eHeader;
 
     ValueEventListener mListener;
 
-    String LoginUserID = "IANODERON";
+    String LoginUserID = "";
     String item_key, address;
     String shelter_key,
             shelter_userID,
@@ -48,6 +53,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
             shelter_days,
             shelter_user_id,
             shelter_image_link;
+    Boolean shelter_available;
 
     Boolean isViewMapClicked;
 
@@ -79,6 +85,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
 
         shelter = FirebaseDatabase.getInstance().getReference("shelter");
         shelter_request = FirebaseDatabase.getInstance().getReference("shelter_request");
+        LoginUserID = mAuth.getCurrentUser().getUid();
 
         mStorage = FirebaseStorage.getInstance().getReference();
 
@@ -88,6 +95,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
         eCapacity = findViewById(R.id.vCapacity);
         eDays = findViewById(R.id.vDays);
         eOwner = findViewById(R.id.vOwner);
+        eAvailable = findViewById(R.id.vAvailable);
 
         bViewMap = findViewById(R.id.viewMap);
         bRequest = findViewById(R.id.addRequest);
@@ -116,6 +124,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
                 shelter_days = sh.getDays();
                 shelter_user_id = sh.getUserID();
                 shelter_image_link = sh.getLink();
+                shelter_available = sh.getAvailable();
 
                 // view map
                 address = shelter_address;
@@ -132,6 +141,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
                 eCapacity.setText(field_max_capacity_allowed);
                 eDays.setText(field_max_days_allowed);
                 eOwner.setText(field_owner);
+                eAvailable.setText("Availability: " + (shelter_available ? "available" : "not-available"));
 
                 StorageReference storageReference = mStorage.child(shelter_image_link);
 
@@ -151,7 +161,11 @@ public class DisplaySingleShelter extends AppCompatActivity {
 
                 if(isOwnerOfPost()) {
                     setRequestBtnToEditBtn();
-                } else {
+                }
+                else if(!shelter_available) {
+                    setRequestBtnToUnavailable();
+                }
+                else {
                     setViewMapButtonStatus();
                 }
 
@@ -169,7 +183,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
     }
 
     public void setButtonViewMapDefaults() {
-        bViewMap.setBackground(getResources().getDrawable(R.drawable.btn_radius));
+        bViewMap.setBackground(getResources().getDrawable(R.drawable.btn_radius_green));
         bViewMap.setTextColor(getResources().getColor(R.color.white));
     }
 
@@ -178,9 +192,14 @@ public class DisplaySingleShelter extends AppCompatActivity {
         bRequest.setTextColor(getResources().getColor(R.color.white));
     }
 
+    public void setRequestBtnToUnavailable() {
+        bRequest.setText("Unavailable");
+        bRequest.setBackground(getResources().getDrawable(R.drawable.btn_radius_grey));
+    }
+
     public void setRequestBtnToEditBtn() {
         bRequest.setText("Edit");
-        bRequest.setBackground(getResources().getDrawable(R.drawable.btn_radius_green));
+        bRequest.setBackground(getResources().getDrawable(R.drawable.btn_radius));
     }
 
     public boolean isOwnerOfPost() {
@@ -200,11 +219,11 @@ public class DisplaySingleShelter extends AppCompatActivity {
 
                 if (isClicked) {
                     isViewMapClicked = true;
-                    bRequest.setText("REQUESTED");
+                    bRequest.setText("INQUIRY SENT");
                     bRequest.setBackground(getResources().getDrawable(R.drawable.btn_radius_active));
                 } else {
                     isViewMapClicked = false;
-                    bRequest.setText("REQUEST");
+                    bRequest.setText("SEND INQUIRY");
                     setButtonRequestDefaults();
                 }
 
@@ -233,10 +252,19 @@ public class DisplaySingleShelter extends AppCompatActivity {
             intent.putExtra("shelter_capacity", shelter_capacity);
             intent.putExtra("shelter_days", shelter_days);
             intent.putExtra("shelter_image_link", shelter_image_link);
+            intent.putExtra("shelter_isAvailable", shelter_available + "");
             startActivity(intent);
         }
 
+        else if(!shelter_available) {
+            Toast("Unavailable...");
+        }
+
         else {
+            if(isViewMapClicked)
+                Toast("Inquiry succesfully removed...");
+            else
+                Toast("Inquiry successfully sent...");
             shelter_request.child(item_key).child(LoginUserID).setValue(new ShelterRequest(!isViewMapClicked));
         }
     }
