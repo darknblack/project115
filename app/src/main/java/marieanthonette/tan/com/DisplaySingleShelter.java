@@ -93,7 +93,7 @@ public class DisplaySingleShelter extends AppCompatActivity {
             startActivity(i);
             finish();
         }
-        LoginUserID = mAuth.getCurrentUser().getDisplayName();
+        LoginUserID = mAuth.getCurrentUser().getDisplayName().toLowerCase();
 
         mStorage = FirebaseStorage.getInstance().getReference();
 

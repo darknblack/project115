@@ -43,7 +43,7 @@ public class Home extends AppCompatActivity {
 
         // GREET THE USER INITIAL LOGIN
 
-        userName = user.getDisplayName();
+        userName = user.getDisplayName().toLowerCase();
 
         mUsername.setText("Username: " + userName);
 
