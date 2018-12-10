@@ -30,30 +30,27 @@ public class LogIn extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_log_in);
 
         mAuth = FirebaseAuth.getInstance();
 
-        // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
         if(mAuth.getCurrentUser() != null) {
-            Toast("USER ALREADY LOGIN");
             goToHomePage();
         }
 
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        // Configure Google Sign In
+        mGoogleSignInClient = GoogleSignIn.getClient(this,
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build());
 
         signInButton = findViewById(R.id.signInButton);
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast("SIGN IN IS CLICKEd");
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, 101);
             }
@@ -62,7 +59,6 @@ public class LogIn extends AppCompatActivity {
     }
 
     public void goToHomePage() {
-        Toast("GO TO HOMPAGE");
         Intent i = new Intent(getApplicationContext(), Home.class);
         i.putExtra("intent_from", "login");
         startActivity(i);
@@ -81,9 +77,7 @@ public class LogIn extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                
-                // ...
+                Toast("Error: " + e.toString());
             }
         }
     }
@@ -95,12 +89,10 @@ public class LogIn extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-
                             goToHomePage();
                         } else {
                             // If sign in fails, display a message to the user
-                            Toast.makeText(getApplicationContext(), "Could not log in", Toast.LENGTH_LONG).show();
+                            Toast("Could not log in...");
                         }
 
                         // ...

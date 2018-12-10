@@ -32,14 +32,13 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        mAuth = FirebaseAuth.getInstance();
-
         bAddShelter = R.id.vAddShelter;
         bViewShelters = R.id.vViewShelters;
         bLogout = R.id.vLogout;
         bViewRequests = R.id.vViewRequests;
         mUsername = findViewById(R.id.username);
 
+        mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
 
         // GREET THE USER INITIAL LOGIN
@@ -51,8 +50,9 @@ public class Home extends AppCompatActivity {
         Intent intent = getIntent();
         if(intent.getExtras() != null && intent.getStringExtra("intent_from").equals("login"))
             Toast("Hi! " + userName);
-
     }
+
+
 
     public void action(View v) {
 

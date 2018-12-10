@@ -243,8 +243,8 @@ public class AddShelter extends AppCompatActivity {
 
     public void deleteShelter(View v) {
         Intent intent = getIntent();
-        String shelter_key = intent.getStringExtra("shelter_key");
-        String shelter_image_link = intent.getStringExtra("shelter_image_link");
+        final String shelter_key = intent.getStringExtra("shelter_key");
+        final String shelter_image_link = intent.getStringExtra("shelter_image_link");
 
         // ADD YES OR NO
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -279,8 +279,8 @@ public class AddShelter extends AppCompatActivity {
     }
 
     public void toAddOrEdit(View v) {
-        Intent intent = getIntent();
-        Boolean doAdd = intent.getExtras() == null; // add or edit
+        final Intent intent = getIntent();
+        final Boolean doAdd = intent.getExtras() == null; // add or edit
 
         // ADD YES OR NO
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {

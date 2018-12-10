@@ -1,5 +1,6 @@
 package marieanthonette.tan.com;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +42,7 @@ public class DisplayShelters extends AppCompatActivity {
 
     DatabaseReference mShelter;
     private FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
 
     EditText mSearchField;
 
@@ -75,12 +78,20 @@ public class DisplayShelters extends AppCompatActivity {
         }
 
         mAuth = FirebaseAuth.getInstance();
-        // REDIRECT IF NOT AUTHENTICATED
-        if(mAuth.getCurrentUser() == null) {
-            Intent i = new Intent(getApplicationContext(), LogIn.class);
-            startActivity(i);
-            finish();
-        }
+
+        mAuthListener = new FirebaseAuth.AuthStateListener(){
+            @Override
+            public  void  onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth){
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user == null) {
+                    Intent i = new Intent(getApplicationContext(), LogIn.class);
+                    startActivity(i);
+                    finish();
+                }
+            }
+        };
+
+        mAuth.addAuthStateListener(mAuthListener);
 
 
         mSearchField.addTextChangedListener(new TextWatcher() {
@@ -97,7 +108,7 @@ public class DisplayShelters extends AppCompatActivity {
     }
 
     public void searchShelter() {
-        String querySearch = mSearchField.getText().toString().trim().toLowerCase();
+        final String querySearch = mSearchField.getText().toString().trim().toLowerCase();
         mShelter.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -173,7 +184,7 @@ public class DisplayShelters extends AppCompatActivity {
         });
     }
 
-    protected void displayShelter(Shelter shelter, String key) {
+    protected void displayShelter(Shelter shelter, final String key) {
         final String shelter_name = shelter.getName();
         final String shelter_address = shelter.getAddress();
         final String shelter_image_link = shelter.getLink();
