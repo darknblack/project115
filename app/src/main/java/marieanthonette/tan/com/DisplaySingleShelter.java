@@ -85,6 +85,14 @@ public class DisplaySingleShelter extends AppCompatActivity {
 
         shelter = FirebaseDatabase.getInstance().getReference("shelter");
         shelter_request = FirebaseDatabase.getInstance().getReference("shelter_request");
+
+        mAuth = FirebaseAuth.getInstance();
+        // REDIRECT IF NOT AUTHENTICATED
+        if(mAuth.getCurrentUser() == null) {
+            Intent i = new Intent(getApplicationContext(), LogIn.class);
+            startActivity(i);
+            finish();
+        }
         LoginUserID = mAuth.getCurrentUser().getUid();
 
         mStorage = FirebaseStorage.getInstance().getReference();

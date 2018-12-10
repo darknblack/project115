@@ -1,5 +1,7 @@
 package marieanthonette.tan.com;
 
-public class Helper {
+import android.content.Context;
+import android.content.Intent;
 
+public class Helper {
 }

@@ -79,6 +79,14 @@ public class AddShelter extends AppCompatActivity {
         // FIREBASE
         shelter = FirebaseDatabase.getInstance().getReference("shelter");
         mStorage = FirebaseStorage.getInstance().getReference("images");
+
+        mAuth = FirebaseAuth.getInstance();
+        // REDIRECT IF NOT AUTHENTICATED
+        if(mAuth.getCurrentUser() == null) {
+            Intent i = new Intent(getApplicationContext(), LogIn.class);
+            startActivity(i);
+            finish();
+        }
         LoginUserID = mAuth.getCurrentUser().getUid();
 
         // FIELDS
