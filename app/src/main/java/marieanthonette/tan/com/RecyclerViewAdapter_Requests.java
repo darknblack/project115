@@ -42,9 +42,19 @@ public class RecyclerViewAdapter_Requests extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//        removeContents();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_request_list_item, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
+    }
+
+    public void removeContents() {
+        mName.clear();
+        mImages.clear();
+        mInquirer.clear();
+        mAddress.clear();
+
+
     }
 
     @Override
@@ -74,7 +84,6 @@ public class RecyclerViewAdapter_Requests extends RecyclerView.Adapter<RecyclerV
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-
         ImageView image;
         TextView imageName, inquirerName, address;
         ConstraintLayout parentLayout;

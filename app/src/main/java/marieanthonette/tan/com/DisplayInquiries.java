@@ -73,18 +73,27 @@ public class DisplayInquiries extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 //                recyclerView.removeAllViews();
-//                mNames.clear();
-//                mInquirerName.clear();
-//                mImageUrls.clear();
 
                 for (DataSnapshot ss : dataSnapshot.getChildren()) {
+
                     final String shelterID = ss.getKey();
 
                     mShelterInquiries.child(shelterID).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot c) {
+                            mNames.clear();
+                            mInquirerName.clear();
+                            mImageUrls.clear();
+                            mAddress.clear();
                             for (DataSnapshot s2 : ss.getChildren()) {
                                 final String shelterInquirer = s2.getKey();
+
+                                ShelterRequest shelterRequest = s2.getValue(ShelterRequest.class);
+
+                                if(!shelterRequest.getRequest()) {
+                                    Log.d("Keys", shelterInquirer);
+                                    continue;
+                                }
 
                                 DatabaseReference sh = FirebaseDatabase.getInstance().getReference("shelter").child(shelterID);
                                 sh.addValueEventListener(new ValueEventListener() {

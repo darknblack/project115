@@ -95,11 +95,11 @@ public class Home extends AppCompatActivity {
                         Intent intent = new Intent(Home.this, LogIn.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+                        finish();
                     }
                 });
 
             Toast("You have successfully sign out!");
-            finish();
         }
     }
     protected void Toast(String message) {
