@@ -65,10 +65,10 @@ public class RecyclerViewAdapter_Requests extends RecyclerView.Adapter<RecyclerV
         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Glide.with(mContext)
-                        .asBitmap()
-                        .load(uri.toString())
-                        .into(holder.image);
+                    Glide.with(mContext)
+                            .asBitmap()
+                            .load(uri.toString())
+                            .into(holder.image);
             }
         });
 

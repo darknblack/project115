@@ -91,7 +91,6 @@ public class DisplayInquiries extends AppCompatActivity {
                                 ShelterRequest shelterRequest = s2.getValue(ShelterRequest.class);
 
                                 if(!shelterRequest.getRequest()) {
-                                    Log.d("Keys", shelterInquirer);
                                     continue;
                                 }
 
@@ -125,16 +124,14 @@ public class DisplayInquiries extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("hackdog", "error " + databaseError.toException());
+                Log.d("DisplayInquiries", "error " + databaseError.toException());
             }
         });
     }
 
     private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView: init recyclerview.");
-        Log.d("initRecyclerView", mNames.toString());
-
-        RecyclerViewAdapter_Requests adapter = new RecyclerViewAdapter_Requests(this,
+        RecyclerViewAdapter_Requests adapter = new RecyclerViewAdapter_Requests(getApplicationContext(),
                 mNames, mImageUrls, mInquirerName, mAddress);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
