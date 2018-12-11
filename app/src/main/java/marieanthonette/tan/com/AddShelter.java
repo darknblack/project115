@@ -260,7 +260,7 @@ public class AddShelter extends AppCompatActivity {
                         public void onSuccess(Void aVoid) {
                             shelter.child(shelter_key).setValue(null);
                             Toast("Delete Succesful...");
-                            navigateUpTo(new Intent(getBaseContext(), AddShelter.class));
+                            navigateUpTo(new Intent(getBaseContext(), DisplayShelters.class));
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
