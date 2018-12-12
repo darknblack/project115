@@ -34,6 +34,20 @@
             android:textColor="#fff" />
 
         <Button
+            android:id="@+id/undoBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_radius"
+            android:onClick="toAddOrEdit"
+            android:text="Undo"
+            android:textColor="#fff" />
+
+        <Button
             android:id="@+id/addEditBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -130,7 +144,7 @@
             <CheckBox
                 android:id="@+id/availableCheckBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="28dp"
                 android:checked="true"
                 android:text="Available" />
 

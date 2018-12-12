@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +37,70 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+
+
+class Memento {
+    private String name, address, maxCapacity, maxDays;
+    Boolean available;
+
+    public Memento(String name, String address, String maxCapacity, String maxDays, Boolean available) {
+        this.name = name;
+        this.address = address;
+        this.maxCapacity = maxCapacity;
+        this.maxDays = maxDays;
+        this.available = available;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getMaxCapacity() {
+        return maxCapacity;
+    }
+
+    public String getMaxDays() {
+        return maxDays;
+    }
+
+    public Boolean isAvailable() {
+        return available;
+    }
+}
+
+class Originator {
+    private String name, address, maxCapacity, maxDays;
+    Boolean available;
+
+    public void setState(String name, String address, String maxCapacity, String maxDays, Boolean available) {
+        this.name = name;
+        this.address = address;
+        this.maxCapacity = maxCapacity;
+        this.maxDays = maxDays;
+        this.available = available;
+    }
+
+    public Memento save() {
+        return new Memento(name, address, maxCapacity, maxDays, available);
+    }
+}
+
+class Caretaker {
+    private ArrayList<Memento> mementos = new ArrayList<>();
+
+    public void addMemento(Memento m) {
+        mementos.add(m);
+    }
+
+    public Memento getMemento() {
+        return mementos.get(0);
+    }
+}
 
 public class AddShelter extends AppCompatActivity {
 
@@ -47,7 +113,7 @@ public class AddShelter extends AppCompatActivity {
 
     EditText eName, eAddress, eCapacity, eDays;
 
-    Button mAddEditBtn, mRemoveBtn;
+    Button mAddEditBtn, mRemoveBtn, mUndoBtn;
     CheckBox mAvailableCheckBox;
 
     private ImageView mSelectImage;
@@ -61,6 +127,7 @@ public class AddShelter extends AppCompatActivity {
     String imageExtension;
     String LoginUserID = "";
 
+    // ITELEC DO MEMENTO
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -104,6 +171,7 @@ public class AddShelter extends AppCompatActivity {
         eDays = findViewById(R.id.etDays);
         mAddEditBtn = findViewById(R.id.addEditBtn);
         mRemoveBtn = findViewById(R.id.removeBtn);
+        mUndoBtn = findViewById(R.id.undoBtn);
         mAddShelterScrollView = findViewById(R.id.addShelterScrollView);
         mAvailableCheckBox = findViewById(R.id.availableCheckBox);
 
@@ -117,6 +185,7 @@ public class AddShelter extends AppCompatActivity {
             }
         });
 
+        mUndoBtn.setVisibility(View.GONE);
         mRemoveBtn.setVisibility(View.GONE);
 
         Intent intent = getIntent();
@@ -133,14 +202,41 @@ public class AddShelter extends AppCompatActivity {
             String shelter_image_link = intent.getStringExtra("shelter_image_link");
             Boolean shelter_isAvailable = Boolean.parseBoolean(intent.getStringExtra("shelter_isAvailable"));
 
+            Caretaker caretaker = new Caretaker();
+            Originator originator = new Originator();
+
             this.setTitle("EDIT");
+
             eName.setText(shelter_name);
             eAddress.setText(shelter_address);
             eCapacity.setText(shelter_capacity);
             eDays.setText(shelter_days);
             mAvailableCheckBox.setChecked(shelter_isAvailable);
 
+            originator.setState(shelter_name,
+                    shelter_address,
+                    shelter_capacity,
+                    shelter_days,
+                    shelter_isAvailable
+            );
+            caretaker.addMemento(originator.save());
+
+            mUndoBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Memento previousField = caretaker.getMemento();
+                    eName.setText(previousField.getName());
+                    eAddress.setText(previousField.getAddress());
+                    eCapacity.setText(previousField.getMaxCapacity());
+                    eDays.setText(previousField.getMaxDays());
+                    mAvailableCheckBox.setChecked(previousField.isAvailable());
+                }
+            });
+
             mAddEditBtn.setText("EDIT");
+
+            mUndoBtn.setVisibility(View.VISIBLE);
+            mUndoBtn.setBackground(getResources().getDrawable(R.drawable.btn_radius_green));
 
             mRemoveBtn.setVisibility(View.VISIBLE);
 
@@ -158,13 +254,7 @@ public class AddShelter extends AppCompatActivity {
             });
         }
 
-
-
         // DEBUG HERE
-    }
-
-    public void log(String message) {
-        Log.d("keys", message);
     }
 
     // ACTIVITY RESULT
@@ -185,7 +275,6 @@ public class AddShelter extends AppCompatActivity {
         }
     }
 
-
     // GET FILE EXTENSION
     private String getFileExtension(File file) {
         String name = file.getName();
@@ -195,8 +284,6 @@ public class AddShelter extends AppCompatActivity {
         }
         return name.substring(lastIndexOf);
     }
-
-
 
     // ADD RECORD
     public void addOrEditRecord(Boolean isNewRecord, String existingShelterKey, String existingFileName) {
@@ -256,6 +343,7 @@ public class AddShelter extends AppCompatActivity {
 
     }
 
+    // DELETE A SHELTER
     public void deleteShelter(View v) {
         Intent intent = getIntent();
         final String shelter_key = intent.getStringExtra("shelter_key");
@@ -312,6 +400,7 @@ public class AddShelter extends AppCompatActivity {
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
+    // TO ADD OR EDIT
     public void toAddOrEdit(View v) {
         final Intent intent = getIntent();
         final Boolean doAdd = intent.getExtras() == null; // add or edit
@@ -357,5 +446,9 @@ public class AddShelter extends AppCompatActivity {
 
     protected void Toast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void log(String message) {
+        Log.d("keys", message);
     }
 }
