@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -23,8 +24,11 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -37,6 +41,9 @@ public class AddShelter extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     DatabaseReference shelter;
+    DatabaseReference mShelterInquiries;
+    StorageReference imagePath;
+    StorageReference mStorage;
 
     EditText eName, eAddress, eCapacity, eDays;
 
@@ -44,13 +51,12 @@ public class AddShelter extends AppCompatActivity {
     CheckBox mAvailableCheckBox;
 
     private ImageView mSelectImage;
-    private StorageReference mStorage;
     private static final int GALLERY_INTENT = 2;
     private ProgressDialog mProgressDialog;
 
     ScrollView mAddShelterScrollView;
 
-    StorageReference imagePath;
+
     Uri imageUri;
     String imageExtension;
     String LoginUserID = "";
@@ -79,6 +85,7 @@ public class AddShelter extends AppCompatActivity {
         // FIREBASE
         shelter = FirebaseDatabase.getInstance().getReference("shelter");
         mStorage = FirebaseStorage.getInstance().getReference("images");
+        mShelterInquiries = FirebaseDatabase.getInstance().getReference("shelter_inquiries");
 
         mAuth = FirebaseAuth.getInstance();
         // REDIRECT IF NOT AUTHENTICATED
@@ -150,6 +157,14 @@ public class AddShelter extends AppCompatActivity {
                 }
             });
         }
+
+
+
+        // DEBUG HERE
+    }
+
+    public void log(String message) {
+        Log.d("keys", message);
     }
 
     // ACTIVITY RESULT
@@ -259,6 +274,25 @@ public class AddShelter extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             shelter.child(shelter_key).setValue(null);
+
+                            mShelterInquiries.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot ds1 : dataSnapshot.getChildren()) {
+                                        String shelter_inquirer = ds1.getKey();
+                                        for(DataSnapshot ds2 : ds1.getChildren()) {
+                                            String shelter_id = ds2.getKey();
+                                            if(shelter_id.equals(shelter_key))
+                                                mShelterInquiries.child(shelter_inquirer).child(shelter_id).setValue(null);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) { }
+                            });
+
+
                             Toast("Delete Succesful...");
                             navigateUpTo(new Intent(getBaseContext(), DisplayShelters.class));
                         }

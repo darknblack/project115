@@ -15,17 +15,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void process(View v){
-        Intent i = null;
-
-        if(v.getId()==R.id.logIn)
-        {
+        if(v.getId()==R.id.logIn) {
+            Intent i = null;
             i = new Intent(this,LogIn.class);
-            startActivity(i);
-        }
-
-        else  if(v.getId()==R.id.signUp)
-        {
-            i = new Intent(this,SignUp.class);
             startActivity(i);
         }
 

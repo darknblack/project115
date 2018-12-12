@@ -80,7 +80,10 @@ public class DisplayInquiries extends AppCompatActivity {
 
                     mShelterInquiries.child(shelterID).addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot c) {
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot_shelterID) {
+                            //TODO DO THIS
+//                            dataSnapshot_shelterID.getRef().setValue(null);
+
                             mNames.clear();
                             mInquirerName.clear();
                             mImageUrls.clear();
@@ -94,11 +97,16 @@ public class DisplayInquiries extends AppCompatActivity {
                                     continue;
                                 }
 
-                                DatabaseReference sh = FirebaseDatabase.getInstance().getReference("shelter").child(shelterID);
+
+                                DatabaseReference sh = FirebaseDatabase.getInstance().getReference("shelter");
                                 sh.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        Shelter shelter_info = dataSnapshot.getValue(Shelter.class);
+                                        if(!dataSnapshot.hasChild(shelterID)) {
+                                            return;
+                                        }
+
+                                        Shelter shelter_info = dataSnapshot.child(shelterID).getValue(Shelter.class);
 
                                         mNames.add(shelter_info.getName());
                                         mImageUrls.add(shelter_info.getLink());
